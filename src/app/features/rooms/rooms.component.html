@@ -1,0 +1,195 @@
+<div class="bg-surface text-light-on-surface min-h-screen antialiased flex flex-col justify-between selection:bg-accent-soft selection:text-primary font-sans">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-outline-variant/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-accent shadow-xs"></span>
+        <span class="font-sans text-[18px] sm:text-xl font-extrabold tracking-tight text-primary">Teacher Fabian</span>
+        <span class="font-sans text-[10px] uppercase tracking-widest text-accent font-bold px-1.5 py-0.5 rounded-md bg-accent-soft border border-accent/20">Salones</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/80">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          <span class="font-sans text-xs font-semibold text-primary">Nivel {{ englishLevel() }}</span>
+        </div>
+
+        <button
+          type="button"
+          (click)="handleSignOut()"
+          [disabled]="isSigningOut()"
+          class="h-10 min-h-10 px-3.5 rounded-lg bg-surface-container-low border border-outline-variant/80 flex items-center justify-center text-outline hover:text-error hover:border-error/40 active:scale-95 transition-all duration-150 gap-2 font-sans text-xs font-semibold disabled:opacity-60"
+        >
+          <hugeicons-icon [icon]="logoutIcon" [size]="16" [color]="'currentColor'" />
+          <span class="hidden sm:inline">Cerrar sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div class="space-y-8">
+
+      <!-- Member Header Banner -->
+      <div class="p-6 sm:p-8 rounded-xl bg-primary text-surface shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-accent/20 border border-accent/30 text-surface font-sans text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-accent"></span>
+              <span>Miembro Verificado</span>
+            </div>
+            <h1 class="font-sans text-2xl sm:text-3xl font-extrabold text-surface tracking-tight">
+              Bienvenido a tus Salones, {{ memberName() }}
+            </h1>
+            <p class="font-sans text-sm text-primary-container max-w-xl leading-relaxed">
+              Aquí encontrarás los enlaces directos a tus círculos de conversación en vivo por Google Meet.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 bg-surface/10 p-4 rounded-xl border border-surface/15 shrink-0">
+            <div class="w-12 h-12 rounded-full bg-accent/30 border border-accent flex items-center justify-center font-sans text-lg font-bold text-surface">
+              {{ englishLevel() }}
+            </div>
+            <div>
+              <p class="font-sans text-xs text-primary-container font-semibold uppercase tracking-wider">Tu Nivel Asignado</p>
+              <p class="font-sans text-sm font-bold text-surface">Fluidez Intermedia-Avanzada</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Salas de Google Meet (Ready for Phase 4) -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-sans text-xl font-bold text-primary">Próximas Mesas de Conversación</h2>
+            <p class="font-sans text-xs sm:text-sm text-outline">Sesiones guiadas por Teacher Fabian de 4 a 6 participantes.</p>
+          </div>
+
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-soft text-accent font-sans text-xs font-bold">
+            Fase 4 Próximamente
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+          <!-- Card 1 -->
+          <div class="bg-surface border border-outline-variant/60 rounded-xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-md bg-accent-soft text-accent font-sans text-xs font-bold">Nivel {{ englishLevel() }}</span>
+                <span class="font-sans text-xs text-outline flex items-center gap-1">
+                  <hugeicons-icon [icon]="calendarIcon" [size]="14" [color]="'#6A7180'" />
+                  Martes 19:00
+                </span>
+              </div>
+              <h3 class="font-sans text-base font-bold text-primary">AI &amp; The Future of Modern Work</h3>
+              <p class="font-sans text-xs text-outline leading-relaxed">
+                Debate sobre el impacto de la inteligencia artificial generativa en las profesiones creativas y técnicas.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-outline-variant/50 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-primary text-surface font-sans text-[11px] font-bold flex items-center justify-center">
+                  TF
+                </div>
+                <span class="font-sans text-xs font-semibold text-primary">Teacher Fabian</span>
+              </div>
+              <button
+                type="button"
+                disabled
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-surface-container text-outline font-sans text-xs font-semibold cursor-not-allowed opacity-80"
+              >
+                <hugeicons-icon [icon]="videoCameraIcon" [size]="14" [color]="'currentColor'" />
+                <span>Google Meet</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-surface border border-outline-variant/60 rounded-xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-md bg-accent-soft text-accent font-sans text-xs font-bold">Nivel {{ englishLevel() }}</span>
+                <span class="font-sans text-xs text-outline flex items-center gap-1">
+                  <hugeicons-icon [icon]="calendarIcon" [size]="14" [color]="'#6A7180'" />
+                  Jueves 20:00
+                </span>
+              </div>
+              <h3 class="font-sans text-base font-bold text-primary">Global Travel &amp; Culture Shocks</h3>
+              <p class="font-sans text-xs text-outline leading-relaxed">
+                Anécdotas divertidas y lecciones aprendidas viajando por el mundo y colaborando con equipos multiculturales.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-outline-variant/50 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-primary text-surface font-sans text-[11px] font-bold flex items-center justify-center">
+                  TF
+                </div>
+                <span class="font-sans text-xs font-semibold text-primary">Teacher Fabian</span>
+              </div>
+              <button
+                type="button"
+                disabled
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-surface-container text-outline font-sans text-xs font-semibold cursor-not-allowed opacity-80"
+              >
+                <hugeicons-icon [icon]="videoCameraIcon" [size]="14" [color]="'currentColor'" />
+                <span>Google Meet</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-surface border border-outline-variant/60 rounded-xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-md bg-accent-soft text-accent font-sans text-xs font-bold">Nivel {{ englishLevel() }}</span>
+                <span class="font-sans text-xs text-outline flex items-center gap-1">
+                  <hugeicons-icon [icon]="calendarIcon" [size]="14" [color]="'#6A7180'" />
+                  Sábado 10:00
+                </span>
+              </div>
+              <h3 class="font-sans text-base font-bold text-primary">Storytelling &amp; Cinema Debates</h3>
+              <p class="font-sans text-xs text-outline leading-relaxed">
+                Análisis conversacional de películas y narrativas contemporáneas que transformaron la cultura pop.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-outline-variant/50 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-primary text-surface font-sans text-[11px] font-bold flex items-center justify-center">
+                  TF
+                </div>
+                <span class="font-sans text-xs font-semibold text-primary">Teacher Fabian</span>
+              </div>
+              <button
+                type="button"
+                disabled
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-surface-container text-outline font-sans text-xs font-semibold cursor-not-allowed opacity-80"
+              >
+                <hugeicons-icon [icon]="videoCameraIcon" [size]="14" [color]="'currentColor'" />
+                <span>Google Meet</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-outline-variant/50 px-4 sm:px-6 lg:px-8 py-5 text-center bg-surface">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs font-sans text-outline">
+      <span>Teacher Fabian &copy; 2026</span>
+      <span>•</span>
+      <span>Salones Virtuales de Google Meet</span>
+    </div>
+  </footer>
+
+</div>

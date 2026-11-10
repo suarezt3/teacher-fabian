@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #244B7A;
+    --color-primary-container: #D5E3F7;
+    --color-accent: #3F7CC8;
+    --color-accent-soft: #EAF1FF;
+    --color-accent-dark: #244B7A;
+    --color-surface: #FFFFFF;
+    --color-surface-container: #EEF2F8;
+    --color-surface-container-low: #F4F7FB;
+    --color-surface-container-high: #DCE5F2;
+    --color-outline: #6A7180;
+    --color-outline-variant: #8FB0D8;
+    --color-success: #1E6B43;
+    --color-error: #BA1A1A;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #1A1C1E;
+    background-color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+  }
+}

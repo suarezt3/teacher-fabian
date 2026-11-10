@@ -1,0 +1,882 @@
+<div class="bg-surface text-light-on-surface min-h-screen antialiased flex flex-col justify-between selection:bg-accent-soft selection:text-primary font-sans">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-outline-variant/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-accent shadow-xs"></span>
+        <span class="font-sans text-[18px] sm:text-xl font-extrabold tracking-tight text-primary">Teacher Fabian</span>
+        <span class="font-sans text-[10px] uppercase tracking-wider text-accent font-bold px-2 py-0.5 rounded-md bg-accent-soft border border-accent/20">
+          Diagnóstico Único
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          (click)="handleSignOut()"
+          [disabled]="isSigningOut()"
+          class="h-10 min-h-10 px-3.5 rounded-lg bg-surface-container-low border border-outline-variant/80 flex items-center justify-center text-outline hover:text-error hover:border-error/40 active:scale-95 transition-all duration-150 gap-2 font-sans text-xs font-semibold disabled:opacity-60"
+        >
+          @if (isSigningOut()) {
+            <span class="w-4 h-4 border-2 border-outline border-t-transparent rounded-full animate-spin"></span>
+          } @else {
+            <hugeicons-icon [icon]="logoutIcon" [size]="16" [color]="'currentColor'" />
+          }
+          <span class="hidden sm:inline">Cerrar sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+
+    <!-- STATE 1: SUCCESS VIEW -->
+    @if (viewState() === 'SUCCESS') {
+      <div class="max-w-2xl mx-auto my-auto py-8">
+        <div class="bg-surface border border-outline-variant/60 rounded-xl p-8 sm:p-12 shadow-sm text-center space-y-6">
+          <div class="w-20 h-20 rounded-full bg-success/10 text-success border border-success/30 flex items-center justify-center mx-auto shadow-xs">
+            <hugeicons-icon [icon]="checkCircleIcon" [size]="44" [color]="'currentColor'" />
+          </div>
+
+          <div class="space-y-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-soft text-accent text-xs font-bold uppercase tracking-wider">
+              Diagnóstico Guardado
+            </span>
+            <h1 class="font-sans text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">
+              ¡TU REGISTRO FUE EXITOSO! 🎉 AHORA RESERVA TUS CUPOS
+            </h1>
+            <p class="font-sans text-sm sm:text-base text-outline max-w-lg mx-auto leading-relaxed">
+              Tu perfil diagnóstico ha sido guardado exitosamente. Ya tienes acceso habilitado a las salas de conversación gratuitas con Teacher Fabian.
+            </p>
+          </div>
+
+          <!-- Important Note -->
+          <div class="p-4 sm:p-5 rounded-lg bg-surface-container-low border border-outline-variant/80 text-left flex items-start gap-3.5">
+            <div class="text-accent shrink-0 mt-0.5">
+              <hugeicons-icon [icon]="infoCircleIcon" [size]="20" [color]="'currentColor'" />
+            </div>
+            <div class="space-y-1">
+              <p class="font-sans text-xs font-bold text-primary uppercase tracking-wider">
+                Nota importante sobre las salas
+              </p>
+              <p class="font-sans text-xs sm:text-sm text-outline leading-relaxed">
+                Recuerda que los cupos por sala son limitados (4 a 6 personas) para asegurar la máxima participación y práctica activa de cada miembro. Te recomendamos reservar con anticipación tu franja horaria.
+              </p>
+            </div>
+          </div>
+
+          <!-- Main CTA -->
+          <div class="pt-4">
+            <button
+              type="button"
+              (click)="navigateToRooms()"
+              class="w-full sm:w-auto min-w-[280px] h-12 min-h-12 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-sm active:scale-95 transition-all duration-150 inline-flex items-center justify-center gap-2.5"
+            >
+              <span>Ir al Calendario de Salas y Reservar</span>
+              <hugeicons-icon [icon]="arrowRightIcon" [size]="18" [color]="'currentColor'" />
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- STATE 2: DECLINED PRIVACY VIEW -->
+    @else if (viewState() === 'DECLINED_PRIVACY') {
+      <div class="max-w-2xl mx-auto my-auto py-8">
+        <div class="bg-surface border border-outline-variant/60 rounded-xl p-8 sm:p-12 shadow-sm text-center space-y-6">
+          <div class="w-20 h-20 rounded-full bg-accent-soft text-primary border border-accent/30 flex items-center justify-center mx-auto shadow-xs">
+            <hugeicons-icon [icon]="shieldIcon" [size]="40" [color]="'currentColor'" />
+          </div>
+
+          <div class="space-y-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-outline text-xs font-bold uppercase tracking-wider">
+              Autorización Requerida
+            </span>
+            <h1 class="font-sans text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">
+              Información sobre el Tratamiento de Datos
+            </h1>
+            <p class="font-sans text-sm sm:text-base text-outline max-w-lg mx-auto leading-relaxed">
+              Para poder asignarte una sala, gestionar tu participación y enviarte los enlaces de Google Meet, requerimos tu autorización de tratamiento de datos personales de acuerdo con la ley colombiana. Respetamos totalmente tu decisión de privacidad.
+            </p>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-lg bg-surface-container-low border border-outline-variant/80 text-left flex items-start gap-3.5">
+            <div class="text-primary shrink-0 mt-0.5">
+              <hugeicons-icon [icon]="infoCircleIcon" [size]="20" [color]="'currentColor'" />
+            </div>
+            <p class="font-sans text-xs sm:text-sm text-outline leading-relaxed">
+              Tus respuestas anteriores continúan guardadas en este formulario. Si deseas revisar los términos y continuar con tu ingreso al club, puedes volver y autorizar tus datos en cualquier instante.
+            </p>
+          </div>
+
+          <!-- CTAs -->
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+            <button
+              type="button"
+              (click)="returnToStep4AfterDeclining()"
+              class="w-full sm:w-auto h-12 min-h-12 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-sm active:scale-95 transition-all duration-150 inline-flex items-center justify-center gap-2"
+            >
+              <hugeicons-icon [icon]="arrowLeftIcon" [size]="18" [color]="'currentColor'" />
+              <span>Volver atrás y autorizar mis datos</span>
+            </button>
+
+            <button
+              type="button"
+              (click)="handleSignOutAndExit()"
+              [disabled]="isSigningOut()"
+              class="w-full sm:w-auto h-12 min-h-12 px-5 rounded-lg bg-surface border border-outline-variant/80 hover:bg-surface-container-low text-outline hover:text-error hover:border-error/40 font-sans text-sm font-semibold active:scale-95 transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              @if (isSigningOut()) {
+                <span class="w-4 h-4 border-2 border-outline border-t-transparent rounded-full animate-spin"></span>
+              } @else {
+                <hugeicons-icon [icon]="logoutIcon" [size]="18" [color]="'currentColor'" />
+              }
+              <span>Cerrar sesión y salir</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- STATE 3: FORM VIEW -->
+    @else {
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Left / Side Card: Teacher Fabian Context (Desktop sticky) -->
+        <aside class="lg:col-span-4 space-y-6">
+          <div class="p-6 sm:p-7 rounded-xl bg-primary text-surface shadow-sm space-y-5">
+            <!-- Mentor profile -->
+            <div class="flex items-center gap-3.5">
+              <div class="w-14 h-14 rounded-full bg-surface/10 border-2 border-accent flex items-center justify-center text-accent-soft shrink-0">
+                <hugeicons-icon [icon]="userIcon" [size]="28" [color]="'currentColor'" />
+              </div>
+              <div>
+                <h3 class="font-sans text-lg font-extrabold text-surface tracking-tight">Teacher Fabian</h3>
+                <span class="inline-flex items-center gap-1 text-xs text-accent-soft font-semibold">
+                  <hugeicons-icon [icon]="verifiedIcon" [size]="14" [color]="'currentColor'" />
+                  <span>Mentor de Conversación</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Dynamic motivational message according to current step -->
+            <div class="p-4 rounded-lg bg-surface/10 border border-surface/15 text-xs text-surface/90 leading-relaxed space-y-1.5">
+              <span class="font-bold text-accent-soft uppercase tracking-wider text-[11px] block">
+                @switch (currentStep()) {
+                  @case (1) { Paso 1: Conociéndote }
+                  @case (2) { Paso 2: Tu Historia con el Idioma }
+                  @case (3) { Paso 3: Tu Zona de Aprendizaje }
+                  @case (4) { Paso 4: Seguridad y Privacidad }
+                }
+              </span>
+              <p>
+                @switch (currentStep()) {
+                  @case (1) {
+                    Conocer tu contexto nos ayuda a asignarte mesas con intereses afines y perfiles con los que te sientas en confianza.
+                  }
+                  @case (2) {
+                    No importa de dónde vienes con el inglés ni tus experiencias pasadas. Aquí lo importante es soltarse y hablar sin miedo.
+                  }
+                  @case (3) {
+                    Tu sinceridad aquí es clave: en nuestras mesas no juzgamos errores, celebramos la práctica y la comunicación real.
+                  }
+                  @case (4) {
+                    Tu privacidad está 100% protegida. Solo usamos tus datos para enviarte los enlaces de Google Meet y coordinar tus salas.
+                  }
+                }
+              </p>
+            </div>
+
+            <!-- Benefits Checklist -->
+            <div class="space-y-3 pt-1 border-t border-surface/15 text-xs text-surface/90">
+              <p class="font-bold text-surface uppercase tracking-wider text-[11px]">
+                Beneficios del Club
+              </p>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-accent-soft mt-0.5">
+                    <hugeicons-icon [icon]="checkIcon" [size]="14" [color]="'currentColor'" />
+                  </span>
+                  <span>Mesas niveladas de 4 a 6 personas.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-accent-soft mt-0.5">
+                    <hugeicons-icon [icon]="checkIcon" [size]="14" [color]="'currentColor'" />
+                  </span>
+                  <span>Feedback constructivo en tiempo real.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-accent-soft mt-0.5">
+                    <hugeicons-icon [icon]="checkIcon" [size]="14" [color]="'currentColor'" />
+                  </span>
+                  <span>100% Gratuito, sin cobros posteriores.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-accent-soft mt-0.5">
+                    <hugeicons-icon [icon]="checkIcon" [size]="14" [color]="'currentColor'" />
+                  </span>
+                  <span>Práctica activa y debates del mundo real.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Account badge -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/70 text-xs text-outline space-y-1">
+            <span class="text-[11px] font-bold text-primary uppercase tracking-wider block">Miembro Autenticado</span>
+            <p class="font-semibold text-primary truncate">{{ userName() }}</p>
+            <p class="truncate text-[11px]">{{ userEmail() }}</p>
+          </div>
+        </aside>
+
+        <!-- Right / Form Card -->
+        <section class="lg:col-span-8 bg-surface border border-outline-variant/60 rounded-xl p-6 sm:p-8 shadow-xs space-y-6">
+
+          <!-- Stepper & Progress -->
+          <div class="space-y-3 pb-4 border-b border-outline-variant/60">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-accent uppercase tracking-wider">
+                Paso {{ currentStep() }} de 4
+              </span>
+              <span class="font-semibold text-outline">
+                {{ progressPercentage() }}% Completado
+              </span>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+              <div
+                class="h-full bg-accent rounded-full transition-all duration-300 ease-out"
+                [style.width.%]="progressPercentage()"
+              ></div>
+            </div>
+
+            <!-- Steps Breadcrumb -->
+            <div class="grid grid-cols-4 gap-2 pt-1 text-[11px] font-semibold text-center text-outline">
+              <span [class.text-primary]="currentStep() >= 1" [class.font-bold]="currentStep() === 1">1. Perfil</span>
+              <span [class.text-primary]="currentStep() >= 2" [class.font-bold]="currentStep() === 2">2. Trayectoria</span>
+              <span [class.text-primary]="currentStep() >= 3" [class.font-bold]="currentStep() === 3">3. Diagnóstico</span>
+              <span [class.text-primary]="currentStep() >= 4" [class.font-bold]="currentStep() === 4">4. Privacidad</span>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          @if (errorMessage()) {
+            <div class="p-4 rounded-lg bg-error/10 border border-error/30 text-error flex items-start gap-3 text-xs leading-relaxed">
+              <hugeicons-icon [icon]="infoCircleIcon" [size]="18" [color]="'currentColor'" class="shrink-0 mt-0.5" />
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          <!-- Form Element -->
+          <form [formGroup]="form" class="space-y-6">
+
+            <!-- STEP 1: General & Demographic Information -->
+            @if (currentStep() === 1) {
+              <div class="space-y-5">
+                <div>
+                  <h2 class="font-sans text-xl font-bold text-primary tracking-tight">
+                    Paso 1: Perfil General &amp; Demográfico
+                  </h2>
+                  <p class="font-sans text-xs sm:text-sm text-outline mt-1 leading-relaxed">
+                    Estos datos nos permiten coordinar los recordatorios de sala y conocer la diversidad del club.
+                  </p>
+                </div>
+
+                <!-- WhatsApp & Age Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- WhatsApp -->
+                  <div class="space-y-1.5">
+                    <label class="block font-sans text-xs font-semibold text-primary">
+                      Número de WhatsApp <span class="text-error">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      formControlName="whatsapp_number"
+                      placeholder="Ej. +57 300 123 4567"
+                      class="w-full h-11 min-h-11 px-3.5 rounded-lg border border-outline-variant/80 bg-surface text-light-on-surface font-sans text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                    />
+                    <span class="block text-[11px] text-outline">Para avisos de inicio de sala.</span>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="space-y-1.5">
+                    <label class="block font-sans text-xs font-semibold text-primary">
+                      Edad <span class="text-error">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="age"
+                      min="10"
+                      max="100"
+                      placeholder="Ej. 25"
+                      class="w-full h-11 min-h-11 px-3.5 rounded-lg border border-outline-variant/80 bg-surface text-light-on-surface font-sans text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                    />
+                    <span class="block text-[11px] text-outline">Para agrupar temáticas afines.</span>
+                  </div>
+                </div>
+
+                <!-- Country / City -->
+                <div class="space-y-1.5">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    País y Ciudad de residencia <span class="text-error">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    formControlName="country_city"
+                    placeholder="Ej. Colombia, Bogotá ó México, Guadalajara"
+                    class="w-full h-11 min-h-11 px-3.5 rounded-lg border border-outline-variant/80 bg-surface text-light-on-surface font-sans text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                  />
+                </div>
+
+                <!-- Gender Chips -->
+                <div class="space-y-2">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    Género <span class="text-error">*</span>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    @for (gender of genderOptions; track gender) {
+                      <button
+                        type="button"
+                        (click)="selectGender(gender)"
+                        class="h-10 min-h-10 px-4 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                        [class.bg-primary]="form.controls.gender.value === gender"
+                        [class.text-surface]="form.controls.gender.value === gender"
+                        [class.border-primary]="form.controls.gender.value === gender"
+                        [class.bg-surface]="form.controls.gender.value !== gender"
+                        [class.text-outline]="form.controls.gender.value !== gender"
+                        [class.border-outline-variant]="form.controls.gender.value !== gender"
+                        [class.hover:border-accent]="form.controls.gender.value !== gender"
+                      >
+                        {{ gender }}
+                      </button>
+                    }
+                  </div>
+
+                  @if (form.controls.gender.value === 'Otro') {
+                    <div class="pt-2">
+                      <input
+                        type="text"
+                        formControlName="gender_custom"
+                        placeholder="Por favor especifica tu género..."
+                        class="w-full h-11 min-h-11 px-3.5 rounded-lg border border-accent bg-surface text-light-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </div>
+                  }
+                </div>
+
+                <!-- Education Level Chips -->
+                <div class="space-y-2">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    Nivel Educativo <span class="text-error">*</span>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    @for (edu of educationOptions; track edu) {
+                      <button
+                        type="button"
+                        (click)="selectEducation(edu)"
+                        class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                        [class.bg-primary]="form.controls.education_level.value === edu"
+                        [class.text-surface]="form.controls.education_level.value === edu"
+                        [class.border-primary]="form.controls.education_level.value === edu"
+                        [class.bg-surface]="form.controls.education_level.value !== edu"
+                        [class.text-outline]="form.controls.education_level.value !== edu"
+                        [class.border-outline-variant]="form.controls.education_level.value !== edu"
+                        [class.hover:border-accent]="form.controls.education_level.value !== edu"
+                      >
+                        {{ edu }}
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Occupation Chips -->
+                <div class="space-y-2">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    Ocupación actual <span class="text-error">*</span>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    @for (occ of occupationOptions; track occ) {
+                      <button
+                        type="button"
+                        (click)="selectOccupation(occ)"
+                        class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                        [class.bg-primary]="form.controls.occupation.value === occ"
+                        [class.text-surface]="form.controls.occupation.value === occ"
+                        [class.border-primary]="form.controls.occupation.value === occ"
+                        [class.bg-surface]="form.controls.occupation.value !== occ"
+                        [class.text-outline]="form.controls.occupation.value !== occ"
+                        [class.border-outline-variant]="form.controls.occupation.value !== occ"
+                        [class.hover:border-accent]="form.controls.occupation.value !== occ"
+                      >
+                        {{ occ }}
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Profession Area (Optional) -->
+                <div class="space-y-1.5">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    Área o Carrera profesional <span class="text-outline font-normal">(Opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    formControlName="profession_area"
+                    placeholder="Ej. Ingeniería de Software, Salud, Derecho, Marketing..."
+                    class="w-full h-11 min-h-11 px-3.5 rounded-lg border border-outline-variant/80 bg-surface text-light-on-surface font-sans text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                  />
+                </div>
+
+                <!-- CTA Next -->
+                <div class="pt-4 flex justify-end">
+                  <button
+                    type="button"
+                    (click)="goToNextStep()"
+                    class="w-full sm:w-auto min-w-[200px] h-11 min-h-11 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-xs active:scale-95 transition-all inline-flex items-center justify-center gap-2"
+                  >
+                    <span>Siguiente: Trayectoria</span>
+                    <hugeicons-icon [icon]="arrowRightIcon" [size]="16" [color]="'currentColor'" />
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- STEP 2: Previous English Journey -->
+            @if (currentStep() === 2) {
+              <div class="space-y-6">
+                <div>
+                  <h2 class="font-sans text-xl font-bold text-primary tracking-tight">
+                    Paso 2: Trayectoria con el Idioma Inglés
+                  </h2>
+                  <p class="font-sans text-xs sm:text-sm text-outline mt-1 leading-relaxed">
+                    Cuéntanos cómo ha sido tu experiencia aprendiendo inglés.
+                  </p>
+                </div>
+
+                <!-- Previous Study Type Chips -->
+                <div class="space-y-2">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    ¿Has estudiado inglés anteriormente? <span class="text-error">*</span>
+                  </label>
+                  <div class="grid grid-cols-1 gap-2.5">
+                    @for (type of studyTypeOptions; track type) {
+                      <button
+                        type="button"
+                        (click)="selectStudyType(type)"
+                        class="p-3.5 rounded-lg border text-left font-sans text-xs sm:text-sm font-semibold transition-all duration-150 flex items-center justify-between"
+                        [class.bg-accent-soft]="form.controls.previous_study_type.value === type"
+                        [class.text-primary]="form.controls.previous_study_type.value === type"
+                        [class.border-accent]="form.controls.previous_study_type.value === type"
+                        [class.bg-surface]="form.controls.previous_study_type.value !== type"
+                        [class.text-outline]="form.controls.previous_study_type.value !== type"
+                        [class.border-outline-variant]="form.controls.previous_study_type.value !== type"
+                        [class.hover:border-accent]="form.controls.previous_study_type.value !== type"
+                      >
+                        <span>{{ type }}</span>
+                        @if (form.controls.previous_study_type.value === type) {
+                          <span class="text-accent">
+                            <hugeicons-icon [icon]="checkCircleIcon" [size]="18" [color]="'currentColor'" />
+                          </span>
+                        }
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Conditional logic based on zero study -->
+                @if (form.controls.previous_study_type.value === 'No, estoy comenzando desde cero.') {
+                  <div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/80 text-xs text-outline flex items-start gap-3">
+                    <div class="text-accent shrink-0 mt-0.5">
+                      <hugeicons-icon [icon]="sparklesIcon" [size]="18" [color]="'currentColor'" />
+                    </div>
+                    <div class="space-y-1">
+                      <p class="font-bold text-primary">¡Bienvenido(a) al camino del inglés!</p>
+                      <p class="leading-relaxed">
+                        Al comenzar desde cero, no requerimos preguntas sobre tiempo de estudio ni exámenes. Avanzaremos directo a definir tu nivel y tus metas conversacionales.
+                      </p>
+                    </div>
+                  </div>
+                } @else if (form.controls.previous_study_type.value) {
+                  <!-- Study Duration -->
+                  <div class="space-y-2 pt-2 border-t border-outline-variant/50">
+                    <label class="block font-sans text-xs font-semibold text-primary">
+                      ¿Cuánto tiempo llevas estudiando inglés? <span class="text-error">*</span>
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                      @for (duration of studyDurationOptions; track duration) {
+                        <button
+                          type="button"
+                          (click)="selectStudyDuration(duration)"
+                          class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                          [class.bg-primary]="form.controls.study_duration.value === duration"
+                          [class.text-surface]="form.controls.study_duration.value === duration"
+                          [class.border-primary]="form.controls.study_duration.value === duration"
+                          [class.bg-surface]="form.controls.study_duration.value !== duration"
+                          [class.text-outline]="form.controls.study_duration.value !== duration"
+                          [class.border-outline-variant]="form.controls.study_duration.value !== duration"
+                          [class.hover:border-accent]="form.controls.study_duration.value !== duration"
+                        >
+                          {{ duration }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- International Exam -->
+                  <div class="space-y-2 pt-2 border-t border-outline-variant/50">
+                    <label class="block font-sans text-xs font-semibold text-primary">
+                      ¿Has presentado algún examen internacional? <span class="text-error">*</span>
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                      @for (exam of internationalExamOptions; track exam) {
+                        <button
+                          type="button"
+                          (click)="selectInternationalExam(exam)"
+                          class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                          [class.bg-primary]="form.controls.international_exam.value === exam"
+                          [class.text-surface]="form.controls.international_exam.value === exam"
+                          [class.border-primary]="form.controls.international_exam.value === exam"
+                          [class.bg-surface]="form.controls.international_exam.value !== exam"
+                          [class.text-outline]="form.controls.international_exam.value !== exam"
+                          [class.border-outline-variant]="form.controls.international_exam.value !== exam"
+                          [class.hover:border-accent]="form.controls.international_exam.value !== exam"
+                        >
+                          {{ exam }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- CTAs -->
+                <div class="pt-4 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    (click)="goToPreviousStep()"
+                    class="h-11 min-h-11 px-4 rounded-lg bg-surface border border-outline-variant/80 text-outline hover:text-primary font-sans text-sm font-semibold active:scale-95 transition-all inline-flex items-center gap-2"
+                  >
+                    <hugeicons-icon [icon]="arrowLeftIcon" [size]="16" [color]="'currentColor'" />
+                    <span>Volver al Paso 1</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="goToNextStep()"
+                    class="min-w-[180px] h-11 min-h-11 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-xs active:scale-95 transition-all inline-flex items-center justify-center gap-2"
+                  >
+                    <span>Siguiente: Diagnóstico</span>
+                    <hugeicons-icon [icon]="arrowRightIcon" [size]="16" [color]="'currentColor'" />
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- STEP 3: Conversational Self-Assessment & Goals -->
+            @if (currentStep() === 3) {
+              <div class="space-y-6">
+                <div>
+                  <h2 class="font-sans text-xl font-bold text-primary tracking-tight">
+                    Paso 3: Diagnóstico Conversacional y Metas
+                  </h2>
+                  <p class="font-sans text-xs sm:text-sm text-outline mt-1 leading-relaxed">
+                    Auto-evalúa tu fluidez para que podamos conectarte en salas donde todos participen al mismo ritmo.
+                  </p>
+                </div>
+
+                <!-- English Level Cards -->
+                <div class="space-y-2.5">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    ¿Cuál consideras que es tu nivel de inglés actual? <span class="text-error">*</span>
+                  </label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    @for (lvl of englishLevelOptions; track lvl.code) {
+                      <button
+                        type="button"
+                        (click)="selectEnglishLevel(lvl.code)"
+                        class="p-3.5 rounded-lg border text-left font-sans transition-all duration-150 flex items-start gap-3"
+                        [class.bg-accent-soft]="form.controls.english_level.value === lvl.code"
+                        [class.border-accent]="form.controls.english_level.value === lvl.code"
+                        [class.bg-surface]="form.controls.english_level.value !== lvl.code"
+                        [class.border-outline-variant]="form.controls.english_level.value !== lvl.code"
+                        [class.hover:border-accent]="form.controls.english_level.value !== lvl.code"
+                      >
+                        <span
+                          class="w-9 h-9 rounded-md flex items-center justify-center text-xs font-bold shrink-0"
+                          [class.bg-primary]="form.controls.english_level.value === lvl.code"
+                          [class.text-surface]="form.controls.english_level.value === lvl.code"
+                          [class.bg-surface-container]="form.controls.english_level.value !== lvl.code"
+                          [class.text-primary]="form.controls.english_level.value !== lvl.code"
+                        >
+                          {{ lvl.badge }}
+                        </span>
+                        <div class="space-y-0.5">
+                          <p class="text-xs sm:text-sm font-bold text-primary leading-tight">{{ lvl.label }}</p>
+                          <p class="text-[11px] text-outline leading-snug">{{ lvl.desc }}</p>
+                        </div>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Speaking Comfort Chips -->
+                <div class="space-y-2 pt-2 border-t border-outline-variant/50">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    ¿Qué tan cómodo(a) te sientes hablando en inglés? <span class="text-error">*</span>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    @for (comfort of speakingComfortOptions; track comfort) {
+                      <button
+                        type="button"
+                        (click)="selectSpeakingComfort(comfort)"
+                        class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                        [class.bg-primary]="form.controls.speaking_comfort.value === comfort"
+                        [class.text-surface]="form.controls.speaking_comfort.value === comfort"
+                        [class.border-primary]="form.controls.speaking_comfort.value === comfort"
+                        [class.bg-surface]="form.controls.speaking_comfort.value !== comfort"
+                        [class.text-outline]="form.controls.speaking_comfort.value !== comfort"
+                        [class.border-outline-variant]="form.controls.speaking_comfort.value !== comfort"
+                        [class.hover:border-accent]="form.controls.speaking_comfort.value !== comfort"
+                      >
+                        {{ comfort }}
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Club Experience Chips -->
+                <div class="space-y-2 pt-2 border-t border-outline-variant/50">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    ¿Has participado antes en clubes de conversación? <span class="text-error">*</span>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    @for (exp of clubExperienceOptions; track exp) {
+                      <button
+                        type="button"
+                        (click)="selectClubExperience(exp)"
+                        class="h-10 min-h-10 px-3.5 rounded-lg font-sans text-xs font-semibold border transition-all duration-150 active:scale-95"
+                        [class.bg-primary]="form.controls.previous_club_experience.value === exp"
+                        [class.text-surface]="form.controls.previous_club_experience.value === exp"
+                        [class.border-primary]="form.controls.previous_club_experience.value === exp"
+                        [class.bg-surface]="form.controls.previous_club_experience.value !== exp"
+                        [class.text-outline]="form.controls.previous_club_experience.value !== exp"
+                        [class.border-outline-variant]="form.controls.previous_club_experience.value !== exp"
+                        [class.hover:border-accent]="form.controls.previous_club_experience.value !== exp"
+                      >
+                        {{ exp }}
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- Learning Goals (Multi-selection) -->
+                <div class="space-y-2 pt-2 border-t border-outline-variant/50">
+                  <div class="flex items-center justify-between">
+                    <label class="block font-sans text-xs font-semibold text-primary">
+                      Tus objetivos principales en el club <span class="text-error">*</span>
+                    </label>
+                    <span class="text-[11px] text-outline">Selecciona al menos 1</span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    @for (goal of learningGoalOptions; track goal) {
+                      <button
+                        type="button"
+                        (click)="toggleLearningGoal(goal)"
+                        class="p-3 rounded-lg border text-left font-sans text-xs font-semibold transition-all duration-150 flex items-center justify-between gap-2"
+                        [class.bg-accent-soft]="isGoalSelected(goal)"
+                        [class.text-primary]="isGoalSelected(goal)"
+                        [class.border-accent]="isGoalSelected(goal)"
+                        [class.bg-surface]="!isGoalSelected(goal)"
+                        [class.text-outline]="!isGoalSelected(goal)"
+                        [class.border-outline-variant]="!isGoalSelected(goal)"
+                        [class.hover:border-accent]="!isGoalSelected(goal)"
+                      >
+                        <span>{{ goal }}</span>
+                        <span
+                          class="w-5 h-5 rounded flex items-center justify-center shrink-0 border"
+                          [class.bg-accent]="isGoalSelected(goal)"
+                          [class.border-accent]="isGoalSelected(goal)"
+                          [class.text-surface]="isGoalSelected(goal)"
+                          [class.border-outline-variant]="!isGoalSelected(goal)"
+                        >
+                          @if (isGoalSelected(goal)) {
+                            <hugeicons-icon [icon]="checkIcon" [size]="12" [color]="'currentColor'" />
+                          }
+                        </span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <!-- CTAs -->
+                <div class="pt-4 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    (click)="goToPreviousStep()"
+                    class="h-11 min-h-11 px-4 rounded-lg bg-surface border border-outline-variant/80 text-outline hover:text-primary font-sans text-sm font-semibold active:scale-95 transition-all inline-flex items-center gap-2"
+                  >
+                    <hugeicons-icon [icon]="arrowLeftIcon" [size]="16" [color]="'currentColor'" />
+                    <span>Volver al Paso 2</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="goToNextStep()"
+                    class="min-w-[180px] h-11 min-h-11 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-xs active:scale-95 transition-all inline-flex items-center justify-center gap-2"
+                  >
+                    <span>Siguiente: Privacidad</span>
+                    <hugeicons-icon [icon]="arrowRightIcon" [size]="16" [color]="'currentColor'" />
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- STEP 4: Legal Consent & Data Authorization -->
+            @if (currentStep() === 4) {
+              <div class="space-y-6">
+                <div>
+                  <h2 class="font-sans text-xl font-bold text-primary tracking-tight">
+                    Paso 4: Autorización de Datos Personales
+                  </h2>
+                  <p class="font-sans text-xs sm:text-sm text-outline mt-1 leading-relaxed">
+                    Último paso. De acuerdo con la normativa legal de Colombia, requerimos tu consentimiento para gestionar tu participación en las salas.
+                  </p>
+                </div>
+
+                <!-- Legal Notice Box -->
+                <div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/80 space-y-3">
+                  <div class="flex items-center gap-2 text-primary font-sans text-xs font-bold uppercase tracking-wider">
+                    <hugeicons-icon [icon]="shieldIcon" [size]="16" [color]="'currentColor'" />
+                    <span>Ley 1581 de 2012 (Colombia)</span>
+                  </div>
+
+                  <p class="font-sans text-xs text-outline leading-relaxed">
+                    De conformidad con la Ley 1581 de 2012 de Protección de Datos Personales de Colombia, autorizo a Teacher Fabian a tratar mis datos personales para fines de gestión educativa, asignación de salas conversacionales, envío de enlaces de acceso y comunicaciones relacionadas con las actividades del club. Entiendo que puedo revocar esta autorización en cualquier momento.
+                  </p>
+                </div>
+
+                <!-- Two Clear Decision Options -->
+                <div class="space-y-2.5">
+                  <label class="block font-sans text-xs font-semibold text-primary">
+                    ¿Autorizas el tratamiento de tus datos personales? <span class="text-error">*</span>
+                  </label>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Option 1: Yes, authorize -->
+                    <button
+                      type="button"
+                      (click)="selectPrivacyConsent('AUTORIZO')"
+                      class="p-4 rounded-lg border text-left font-sans transition-all duration-150 flex items-start gap-3"
+                      [class.bg-accent-soft]="form.controls.privacy_consent.value === 'AUTORIZO'"
+                      [class.border-accent]="form.controls.privacy_consent.value === 'AUTORIZO'"
+                      [class.bg-surface]="form.controls.privacy_consent.value !== 'AUTORIZO'"
+                      [class.border-outline-variant]="form.controls.privacy_consent.value !== 'AUTORIZO'"
+                      [class.hover:border-accent]="form.controls.privacy_consent.value !== 'AUTORIZO'"
+                    >
+                      <span
+                        class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 border"
+                        [class.bg-accent]="form.controls.privacy_consent.value === 'AUTORIZO'"
+                        [class.border-accent]="form.controls.privacy_consent.value === 'AUTORIZO'"
+                        [class.text-surface]="form.controls.privacy_consent.value === 'AUTORIZO'"
+                        [class.border-outline-variant]="form.controls.privacy_consent.value !== 'AUTORIZO'"
+                      >
+                        @if (form.controls.privacy_consent.value === 'AUTORIZO') {
+                          <hugeicons-icon [icon]="checkIcon" [size]="14" [color]="'currentColor'" />
+                        }
+                      </span>
+                      <div class="space-y-1">
+                        <p class="font-sans text-sm font-bold text-primary">
+                          Sí, autorizo el tratamiento
+                        </p>
+                        <p class="font-sans text-xs text-outline leading-snug">
+                          Acepto los términos para ingresar a las salas y recibir los enlaces de Google Meet.
+                        </p>
+                      </div>
+                    </button>
+
+                    <!-- Option 2: No, decline -->
+                    <button
+                      type="button"
+                      (click)="selectPrivacyConsent('NO_AUTORIZO')"
+                      class="p-4 rounded-lg border text-left font-sans transition-all duration-150 flex items-start gap-3"
+                      [class.bg-surface-container]="form.controls.privacy_consent.value === 'NO_AUTORIZO'"
+                      [class.border-outline]="form.controls.privacy_consent.value === 'NO_AUTORIZO'"
+                      [class.bg-surface]="form.controls.privacy_consent.value !== 'NO_AUTORIZO'"
+                      [class.border-outline-variant]="form.controls.privacy_consent.value !== 'NO_AUTORIZO'"
+                      [class.hover:border-outline]="form.controls.privacy_consent.value !== 'NO_AUTORIZO'"
+                    >
+                      <span
+                        class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 border"
+                        [class.bg-outline]="form.controls.privacy_consent.value === 'NO_AUTORIZO'"
+                        [class.border-outline]="form.controls.privacy_consent.value === 'NO_AUTORIZO'"
+                        [class.text-surface]="form.controls.privacy_consent.value === 'NO_AUTORIZO'"
+                        [class.border-outline-variant]="form.controls.privacy_consent.value !== 'NO_AUTORIZO'"
+                      >
+                        @if (form.controls.privacy_consent.value === 'NO_AUTORIZO') {
+                          <span class="w-2 h-2 rounded-full bg-surface"></span>
+                        }
+                      </span>
+                      <div class="space-y-1">
+                        <p class="font-sans text-sm font-bold text-outline">
+                          No autorizo el tratamiento
+                        </p>
+                        <p class="font-sans text-xs text-outline leading-snug">
+                          Entiendo que no podré participar en las salas de conversación por requerimiento legal.
+                        </p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- CTAs -->
+                <div class="pt-4 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    (click)="goToPreviousStep()"
+                    class="h-11 min-h-11 px-4 rounded-lg bg-surface border border-outline-variant/80 text-outline hover:text-primary font-sans text-sm font-semibold active:scale-95 transition-all inline-flex items-center gap-2"
+                  >
+                    <hugeicons-icon [icon]="arrowLeftIcon" [size]="16" [color]="'currentColor'" />
+                    <span>Volver al Paso 3</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="handleStep4Submit()"
+                    [disabled]="!isStep4Valid() || isSaving()"
+                    class="min-w-[220px] h-12 min-h-12 px-6 rounded-lg bg-primary hover:bg-primary/95 text-surface font-sans text-sm font-bold shadow-sm active:scale-95 transition-all inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    @if (isSaving()) {
+                      <span class="w-4 h-4 border-2 border-surface border-t-transparent rounded-full animate-spin"></span>
+                      <span>Guardando...</span>
+                    } @else {
+                      <span>Finalizar Diagnóstico</span>
+                      <hugeicons-icon [icon]="checkCircleIcon" [size]="18" [color]="'currentColor'" />
+                    }
+                  </button>
+                </div>
+              </div>
+            }
+
+          </form>
+
+        </section>
+
+      </div>
+    }
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-outline-variant/50 px-4 sm:px-6 lg:px-8 py-5 text-center bg-surface">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs font-sans text-outline">
+      <span>Teacher Fabian &copy; 2026</span>
+      <span>•</span>
+      <span>Club de Conversación en Inglés</span>
+    </div>
+  </footer>
+
+</div>

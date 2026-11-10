@@ -1,0 +1,16 @@
+{
+  "name": "Teacher Fabian Circles",
+  "short_name": "Teacher Fabian",
+  "description": "Clubes de conversación guiados en vivo para hablar inglés con soltura y confianza.",
+  "start_url": "/landing",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#244B7A",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
